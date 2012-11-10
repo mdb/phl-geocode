@@ -24,9 +24,11 @@ PHLGeolocate.prototype.callAPI = function (url, callback) {
 
   http.get(url, function(res) {
     res.setEncoding('utf8');
+
     res.on('data', function(chunk) {
       self.settings.responseBody += chunk;
     });
+
     res.on('end', function() {
       result = self.parseLocations(JSON.parse(self.settings.responseBody.Locations));
       callback(result);
@@ -40,9 +42,9 @@ PHLGeolocate.prototype.parseLocations = function (locs) {
 	var locLength = locs.length;
 	var loc;
 	var i;
+	var geometry;
 
 	for (i=0; i<locLength; i++) {
-    var geometry;
 		loc = locs[i];
 
 		if (loc.Address.Similarity >= self.settings.minConfidence) {
