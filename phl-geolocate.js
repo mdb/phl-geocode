@@ -37,7 +37,7 @@ PHLGeolocate.prototype.makeAPICall = function (url, callback) {
 
 PHLGeolocate.prototype.getAddressKey = function (address, callback) {
   var url = this.geoHost + this.liAddressKeyPath + encodeURI(address);
-  this.makeApiCall(url, callback);
+  this.makeAPICall(url, callback);
 };
 
 PHLGeolocate.prototype.parseResponse = function (result) {
