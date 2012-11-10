@@ -15,46 +15,42 @@ function PHLGeolocate(opts) {
 
 PHLGeolocate.prototype.getCoordinates = function (address, callback) {
   var url = this.settings.geoHost + this.settings.locationPath + encodeURI(address);
-  this.makeAPICall(url, callback);
+  this.callAPI(url, callback);
 };
 
-PHLGeolocate.prototype.makeAPICall = function (url, callback) {
+PHLGeolocate.prototype.callAPI = function (url, callback) {
   var self = this;
-  self.settings.responseBody = '';
+  var result;
 
-  console.log('url: ', url);
   http.get(url, function(res) {
     res.setEncoding('utf8');
     res.on('data', function(chunk) {
       self.settings.responseBody += chunk;
     });
     res.on('end', function() {
-      var result = self.parseResponse(JSON.parse(self.settings.responseBody));
+      result = self.parseLocations(JSON.parse(self.settings.responseBody.Locations));
       callback(result);
     });
   });
 };
 
-PHLGeolocate.prototype.getAddressKey = function (address, callback) {
-  var url = this.geoHost + this.liAddressKeyPath + encodeURI(address);
-  this.makeAPICall(url, callback);
-};
-
-PHLGeolocate.prototype.parseResponse = function (result) {
+PHLGeolocate.prototype.parseLocations = function (locs) {
 	var self = this;
 	var locations = [];
-	var locLength = result.Locations.length;
+	var locLength = locs.length;
+	var loc;
 	var i;
 
 	for (i=0; i<locLength; i++) {
-		var location = result.Locations[i];
+    var geometry;
+		loc = locs[i];
 
-		if (location.Address.Similarity >= self.settings.minConfidence) {
-			var geometry = {
-        address: location.Address.StandardizedAddress,
-        similarity: location.Address.Similarity,
-        latitude: location.YCoord,
-        longitude: location.XCoord
+		if (loc.Address.Similarity >= self.settings.minConfidence) {
+			geometry = {
+        address: loc.Address.StandardizedAddress,
+        similarity: loc.Address.Similarity,
+        latitude: loc.YCoord,
+        longitude: loc.XCoord
       };
 
 			locations.push(geometry);

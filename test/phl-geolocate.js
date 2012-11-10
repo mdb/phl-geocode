@@ -43,10 +43,10 @@ describe("PHLGeolocate", function() {
     });
   });
 
-  describe("#makeAPICall", function () {
+  describe("#callAPI", function () {
     it("exists a public method on a PHLGeolocate instance", function (done) {
       phlGeolocate = require(geolocatePath)();
-      expect(typeof phlGeolocate.makeAPICall).to.eql("function");
+      expect(typeof phlGeolocate.callAPI).to.eql("function");
       done();
     });
 
@@ -56,10 +56,67 @@ describe("PHLGeolocate", function() {
         .get('/some/path')
         .reply(200, {'some_key':'some_value'});
       
-      phlGeolocate.makeAPICall('http://www.someURL.com/some/path', function(r) {
+      phlGeolocate.callAPI('http://www.someURL.com/some/path', function(r) {
         expect(r).to.eql({'some_key':'some_value'});
         done();
       });
+    });
+  });
+
+  describe("#parseResponse", function () {
+    var phlGeolocate;
+    var fakeResp;
+
+    beforeEach(function (done) {
+      phlGeolocate = require(geolocatePath)();
+      fakeResp = [
+        {
+          Address: {
+            StandardizedAddress: 'first address',
+            Similarity: 100
+          },
+          YCoord: 'first y coordinate',
+          XCoord: 'first x coordinate'
+        },
+        {
+          Address: {
+            StandardizedAddress: 'second address',
+            Similarity: 90 
+          },
+          YCoord: 'second y coordinate',
+          XCoord: 'second x coordinate'
+        }
+      ];
+      done();
+    });
+
+    it("loops over an array of locations object and returns an array of formatting locations", function () {
+      expect(phlGeolocate.parseLocations(fakeResp)[0]).to.eql({
+        address: "first address",
+        similarity: 100,
+        latitude: "first y coordinate",
+        longitude: "first x coordinate"
+      });
+      
+      expect(phlGeolocate.parseLocations(fakeResp)[1]).to.eql({
+        address: "second address",
+        similarity: 90,
+        latitude: "second y coordinate",
+        longitude: "second x coordinate"
+      });
+    });
+
+    it("loops ignores any locations whose similarity is greater than phlGeolocate.settings.minConfidence", function () {
+      phlGeolocate = require(geolocatePath)({minConfidence: 95});
+
+      expect(phlGeolocate.parseLocations(fakeResp)[0]).to.eql({
+        address: "first address",
+        similarity: 100,
+        latitude: "first y coordinate",
+        longitude: "first x coordinate"
+      });
+      
+      expect(phlGeolocate.parseLocations(fakeResp).length).to.eql(1);
     });
   });
 });
