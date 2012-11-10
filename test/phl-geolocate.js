@@ -6,7 +6,6 @@ describe("PHLGeolocate", function() {
   var phlGeolocate;
 
   describe("#settings", function () {
-
     it("exists as a public object on a PHLGeolocate instance", function () {
       phlGeolocate = require(geolocatePath)();
       expect(typeof phlGeolocate.settings).to.eql('object');
