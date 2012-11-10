@@ -1,5 +1,5 @@
-var http = require('http');
 var _ = require('underscore');
+var request = require('request');
 
 function PHLGeolocate(opts) {
   this.defaultSettings = {
@@ -7,7 +7,7 @@ function PHLGeolocate(opts) {
     locationPath: '/ULRS311/Data/Location/',
     liAddressKeyPath: '/ULRS311/Data/LIAddressKey/',
     minConfidence: 85,
-    responseBody: undefined
+    responseBody: '' 
   };
 
   this.settings = opts ? _.defaults(opts, this.defaultSettings) : this.defaultSettings;
@@ -22,17 +22,10 @@ PHLGeolocate.prototype.callAPI = function (url, callback) {
   var self = this;
   var result;
 
-  http.get(url, function(res) {
-    res.setEncoding('utf8');
-
-    res.on('data', function(chunk) {
-      self.settings.responseBody += chunk;
-    });
-
-    res.on('end', function() {
-      result = self.parseLocations(JSON.parse(self.settings.responseBody.Locations));
-      callback(result);
-    });
+  request(url, function (error, response, body) {
+    self.settings.responseBody = body;
+    result = self.parseLocations(JSON.parse(self.settings.responseBody).Locations);
+    callback(result);
   });
 };
 
