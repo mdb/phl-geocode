@@ -45,14 +45,14 @@ describe("PHLGeocode", function() {
 
     it("calls getData", function (done) {
       phlGeocode = require(geocoderPath)();
-      sinon.spy(phlGeocode, 'getData');
+      var spy = sinon.spy(phlGeocode, 'getData');
       
       nock('http://www.someURL.com')
         .get('/some/path')
         .reply(200, fakeResp);
 
       phlGeocode.getCoordinates('some address', function (d) {
-        expect(phlGeocode.getData.calledOnce).to.eql(true);
+        expect(spy.calledOnce).to.eql(true);
         done();
       });
     });
