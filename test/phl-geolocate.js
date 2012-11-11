@@ -1,67 +1,67 @@
 var nock = require('nock');
 var expect = require('expect.js');
 var sinon = require('sinon');
-var geolocatePath = '../phl-geolocate';
+var geocoderPath = '../phl-geolocate';
 var fakeResp = require('./fixtures/response');
 var fakeLocs = require('./fixtures/locations');
 
-describe("PHLGeolocate", function() {
-  var phlGeolocate;
+describe("PHLGeocode", function() {
+  var phlGeocode;
 
   describe("#settings", function () {
-    it("exists as a public object on a PHLGeolocate instance", function () {
-      phlGeolocate = require(geolocatePath)();
-      expect(typeof phlGeolocate.settings).to.eql('object');
+    it("exists as a public object on a PHLGeocode instance", function () {
+      phlGeocode = require(geocoderPath)();
+      expect(typeof phlGeocode.settings).to.eql('object');
     });
     
     it("is set to the value of the prototype's defaultSettings if no settings have been passed", function () {
-      phlGeolocate = require(geolocatePath)();
-      expect(phlGeolocate.settings.geoHost).to.eql("http://services.phila.gov");
-      expect(phlGeolocate.settings.locationPath).to.eql("/ULRS311/Data/Location/");
-      expect(phlGeolocate.settings.minConfidence).to.eql(85);
+      phlGeocode = require(geocoderPath)();
+      expect(phlGeocode.settings.geoHost).to.eql("http://services.phila.gov");
+      expect(phlGeocode.settings.locationPath).to.eql("/ULRS311/Data/Location/");
+      expect(phlGeocode.settings.minConfidence).to.eql(85);
     });
 
     it("is set to the value of the options it's passed if it's instantiated with an options object", function () {
-      phlGeolocate = require(geolocatePath)({
+      phlGeocode = require(geocoderPath)({
         geoHost: 'fakeHost',
         locationPath: 'fakePath',
         liAddressKeyPath: 'fakeAddressPath',
         minConfidence: 100 
       });
 
-      expect(phlGeolocate.settings.geoHost).to.eql("fakeHost");
-      expect(phlGeolocate.settings.locationPath).to.eql("fakePath");
-      expect(phlGeolocate.settings.liAddressKeyPath).to.eql("fakeAddressPath");
-      expect(phlGeolocate.settings.minConfidence).to.eql(100);
+      expect(phlGeocode.settings.geoHost).to.eql("fakeHost");
+      expect(phlGeocode.settings.locationPath).to.eql("fakePath");
+      expect(phlGeocode.settings.liAddressKeyPath).to.eql("fakeAddressPath");
+      expect(phlGeocode.settings.minConfidence).to.eql(100);
     });
   });
 
   describe("#getCoordinates", function () {
-    it("exists a public method on a PHLGeolocate instance", function (done) {
-      phlGeolocate = require(geolocatePath)();
-      expect(typeof phlGeolocate.getCoordinates).to.eql("function");
+    it("exists a public method on a PHLGeocode instance", function (done) {
+      phlGeocode = require(geocoderPath)();
+      expect(typeof phlGeocode.getCoordinates).to.eql("function");
       done();
     });
 
     it("calls getData", function (done) {
-      phlGeolocate = require(geolocatePath)();
-      sinon.spy(phlGeolocate, 'getData');
+      phlGeocode = require(geocoderPath)();
+      sinon.spy(phlGeocode, 'getData');
       
       nock('http://www.someURL.com')
         .get('/some/path')
         .reply(200, fakeResp);
 
-      phlGeolocate.getCoordinates('some address', function (d) {
-        expect(phlGeolocate.getData.calledOnce).to.eql(true);
+      phlGeocode.getCoordinates('some address', function (d) {
+        expect(phlGeocode.getData.calledOnce).to.eql(true);
         done();
       });
     });
   });
 
   describe("#getData", function () {
-    it("exists a public method on a PHLGeolocate instance", function (done) {
-      phlGeolocate = require(geolocatePath)();
-      expect(typeof phlGeolocate.getData).to.eql("function");
+    it("exists a public method on a PHLGeocode instance", function (done) {
+      phlGeocode = require(geocoderPath)();
+      expect(typeof phlGeocode.getData).to.eql("function");
       done();
     });
 
@@ -70,7 +70,7 @@ describe("PHLGeolocate", function() {
         .get('/some/path')
         .reply(200, fakeResp);
       
-      phlGeolocate.getData('http://www.someURL.com/some/path', function(r) {
+      phlGeocode.getData('http://www.someURL.com/some/path', function(r) {
         expect(r).to.eql([
           {
             address: '1500 MARKET ST',
@@ -94,30 +94,28 @@ describe("PHLGeolocate", function() {
         .get('/some/path')
         .reply(200, fakeResp);
       
-      phlGeolocate.getData('http://www.someURL.com/some/path', function(r) {
-        expect(JSON.parse(phlGeolocate.settings.responseBody)).to.eql(fakeResp);
+      phlGeocode.getData('http://www.someURL.com/some/path', function(r) {
+        expect(JSON.parse(phlGeocode.settings.responseBody)).to.eql(fakeResp);
         done();
       });
     });
   });
 
   describe("#parseResponse", function () {
-    var phlGeolocate;
-
     beforeEach(function (done) {
-      phlGeolocate = require(geolocatePath)();
+      phlGeocode = require(geocoderPath)();
       done();
     });
 
     it("loops over an array of locations object and returns an array of formatting locations", function () {
-      expect(phlGeolocate.parseLocations(fakeLocs)[0]).to.eql({
+      expect(phlGeocode.parseLocations(fakeLocs)[0]).to.eql({
         address: "first address",
         similarity: 100,
         latitude: "first y coordinate",
         longitude: "first x coordinate"
       });
       
-      expect(phlGeolocate.parseLocations(fakeLocs)[1]).to.eql({
+      expect(phlGeocode.parseLocations(fakeLocs)[1]).to.eql({
         address: "second address",
         similarity: 90,
         latitude: "second y coordinate",
@@ -125,17 +123,17 @@ describe("PHLGeolocate", function() {
       });
     });
 
-    it("loops ignores any locations whose similarity is greater than phlGeolocate.settings.minConfidence", function () {
-      phlGeolocate = require(geolocatePath)({minConfidence: 95});
+    it("loops ignores any locations whose similarity is greater than PHLGeocode.settings.minConfidence", function () {
+      phlGeocode = require(geocoderPath)({minConfidence: 95});
 
-      expect(phlGeolocate.parseLocations(fakeLocs)[0]).to.eql({
+      expect(phlGeocode.parseLocations(fakeLocs)[0]).to.eql({
         address: "first address",
         similarity: 100,
         latitude: "first y coordinate",
         longitude: "first x coordinate"
       });
       
-      expect(phlGeolocate.parseLocations(fakeLocs).length).to.eql(1);
+      expect(phlGeocode.parseLocations(fakeLocs).length).to.eql(1);
     });
   });
 });

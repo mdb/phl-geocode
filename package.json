@@ -1,6 +1,6 @@
 {
-  "name": "phl-geolocate",
-  "description": "Geolocate a Philadelphia Address.",
+  "name": "phl-geocode",
+  "description": "Get latitude and longitude coordinates for a Philadelphia Address.",
   "version": "0.0.1",
   "private": true,
   "engines": {

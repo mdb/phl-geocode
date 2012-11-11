@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var request = require('request');
 
-function PHLGeolocate(opts) {
+function PHLGeocode(opts) {
   this.defaultSettings = {
     geoHost: 'http://services.phila.gov',
     locationPath: '/ULRS311/Data/Location/',
@@ -12,12 +12,12 @@ function PHLGeolocate(opts) {
   this.settings = opts ? _.defaults(opts, this.defaultSettings) : this.defaultSettings;
 }
 
-PHLGeolocate.prototype.getCoordinates = function (address, callback) {
+PHLGeocode.prototype.getCoordinates = function (address, callback) {
   var url = this.settings.geoHost + this.settings.locationPath + encodeURI(address);
   this.getData(url, callback);
 };
 
-PHLGeolocate.prototype.getData = function (url, callback) {
+PHLGeocode.prototype.getData = function (url, callback) {
   var self = this;
   var result;
 
@@ -28,7 +28,7 @@ PHLGeolocate.prototype.getData = function (url, callback) {
   });
 };
 
-PHLGeolocate.prototype.parseLocations = function (locs) {
+PHLGeocode.prototype.parseLocations = function (locs) {
 	var self = this;
 	var locations = [];
 	var locLength = locs.length;
@@ -55,5 +55,5 @@ PHLGeolocate.prototype.parseLocations = function (locs) {
 };
 
 module.exports = function(opts) {
-  return new PHLGeolocate(opts);
+  return new PHLGeocode(opts);
 };
