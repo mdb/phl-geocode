@@ -10,15 +10,13 @@ The module uses Philadelphia's [311 Mobile Data Service API](http://services.phi
 
 ## Getting Started
 
+Install phl-geocode:
+
+    npm install phl-geocode
+
 Require and instantiate phl-geocode:
   
     var phlGeocode = require('phl-geocode')();
-
-Overrding default settings:
-
-    var phlGeocode = require('phl-geocode')({
-      minConfidence: 100
-    });
 
 Default settings:
     
@@ -28,6 +26,12 @@ Default settings:
       minConfidence: 85
       responseBody: ''
     }
+
+Overriding default settings on instantiation:
+
+    var phlGeocode = require('phl-geocode')({
+      minConfidence: 100
+    });
 
 ## Example Usage
 
