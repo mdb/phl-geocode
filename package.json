@@ -15,6 +15,7 @@
     "mocha": "*",
     "nock": "*",
     "expect.js": "*",
+    "sinon": "*",
     "grunt": ">=0.3.16",
     "grunt-simple-mocha": ">=0.2.0"
   },
