@@ -1,18 +1,20 @@
-# phl-geolocate
+# phl-geocode
 
-A Node.js for geolocating Philadelphia addresses.
+A Node.js module for getting latitude and longitude coordinates for a Philadelphia addresses.
 
-phl-geolocate is based on the geolocation component of (Mark Headd)[http://twitter.com/mheadd]'s (phlfindpolls gist)[https://gist.github.com/4015200]
+phl-geocode is based on the geolocation component of (Mark Headd)[http://twitter.com/mheadd]'s (phlfindpolls gist)[https://gist.github.com/4015200]
+
+The module uses Philadelphia's (311 Mobile Data Service API)[http://services.phila.gov/ULRS311].
 
 ## Getting Started
 
-Require and instantiate node-nyt:
+Require and instantiate phl-geocode:
   
-    var phlGeolocate = require('phl-geolocate')();
+    var phlGeocode = require('phl-geocode')();
 
 Overrding default settings:
 
-    var phlGeolocate = require('phl-geolocate')({
+    var phlGeocode = require('phl-geocode')({
       minConfidence: 100
     });
 
@@ -20,7 +22,7 @@ Overrding default settings:
 
 Get latitude and longitude coordinates for a Philadelpia address:
 
-    phlGeolocate.getCoordinates('1500 market street', function (d) {
+    phlGeocode.getCoordinates('1500 market street', function (d) {
       console.log(d);
 
       /* Example response:
