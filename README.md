@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/mdb/phl-geocode.png?branch=master)](https://travis-ci.org/mdb/phl-geocode)
+
 # phl-geocode
 
 A Node.js module for getting latitude and longitude coordinates for a Philadelphia addresses.
@@ -17,6 +19,15 @@ Overrding default settings:
     var phlGeocode = require('phl-geocode')({
       minConfidence: 100
     });
+
+Default settings:
+    
+    {
+      geoHost: 'http://services.phila.gov',
+      locationPath: '/ULRS311/Data/Location/',
+      minConfidence: 85
+      responseBody: ''
+    }
 
 ## Example Usage
 
