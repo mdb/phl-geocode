@@ -1,5 +1,6 @@
 var nock = require('nock');
 var expect = require('expect.js');
+var sinon = require('sinon');
 var geolocatePath = '../phl-geolocate';
 var fakeResp = require('./fixtures/response');
 var fakeLocs = require('./fixtures/locations');
@@ -40,6 +41,20 @@ describe("PHLGeolocate", function() {
       phlGeolocate = require(geolocatePath)();
       expect(typeof phlGeolocate.getCoordinates).to.eql("function");
       done();
+    });
+
+    it("calls getData", function (done) {
+      phlGeolocate = require(geolocatePath)();
+      sinon.spy(phlGeolocate, 'getData');
+      
+      nock('http://www.someURL.com')
+        .get('/some/path')
+        .reply(200, fakeResp);
+
+      phlGeolocate.getCoordinates('some address', function (d) {
+        expect(phlGeolocate.getData.calledOnce).to.eql(true);
+        done();
+      });
     });
   });
 
