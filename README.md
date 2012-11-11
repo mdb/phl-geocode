@@ -2,9 +2,9 @@
 
 A Node.js module for getting latitude and longitude coordinates for a Philadelphia addresses.
 
-phl-geocode is based on the geolocation component of (Mark Headd)[http://twitter.com/mheadd]'s (phlfindpolls gist)[https://gist.github.com/4015200]
+phl-geocode is based on the geolocation component of [Mark Headd](http://twitter.com/mheadd)'s [phlfindpolls gist](https://gist.github.com/4015200)
 
-The module uses Philadelphia's (311 Mobile Data Service API)[http://services.phila.gov/ULRS311].
+The module uses Philadelphia's 311 Mobile Data Service API](http://services.phila.gov/ULRS311).
 
 ## Getting Started
 
