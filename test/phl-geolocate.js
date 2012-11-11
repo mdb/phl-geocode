@@ -74,8 +74,15 @@ describe("PHLGeolocate", function() {
       });
     });
 
-    it("", function () {
+    it("sets settings.responseBody to the value of the API request response body", function (done) {
+      nock('http://www.someURL.com')
+        .get('/some/path')
+        .reply(200, fakeResp);
       
+      phlGeolocate.getData('http://www.someURL.com/some/path', function(r) {
+        expect(JSON.parse(phlGeolocate.settings.responseBody)).to.eql(fakeResp);
+        done();
+      });
     });
   });
 
