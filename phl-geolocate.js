@@ -5,7 +5,6 @@ function PHLGeolocate(opts) {
   this.defaultSettings = {
     geoHost: 'http://services.phila.gov',
     locationPath: '/ULRS311/Data/Location/',
-    liAddressKeyPath: '/ULRS311/Data/LIAddressKey/',
     minConfidence: 85,
     responseBody: '' 
   };
@@ -15,10 +14,10 @@ function PHLGeolocate(opts) {
 
 PHLGeolocate.prototype.getCoordinates = function (address, callback) {
   var url = this.settings.geoHost + this.settings.locationPath + encodeURI(address);
-  this.callAPI(url, callback);
+  this.getData(url, callback);
 };
 
-PHLGeolocate.prototype.callAPI = function (url, callback) {
+PHLGeolocate.prototype.getData = function (url, callback) {
   var self = this;
   var result;
 

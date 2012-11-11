@@ -1,6 +1,8 @@
 var nock = require('nock');
 var expect = require('expect.js');
 var geolocatePath = '../phl-geolocate';
+var fakeResp = require('./fixtures/response');
+var fakeLocs = require('./fixtures/locations');
 
 describe("PHLGeolocate", function() {
   var phlGeolocate;
@@ -15,7 +17,6 @@ describe("PHLGeolocate", function() {
       phlGeolocate = require(geolocatePath)();
       expect(phlGeolocate.settings.geoHost).to.eql("http://services.phila.gov");
       expect(phlGeolocate.settings.locationPath).to.eql("/ULRS311/Data/Location/");
-      expect(phlGeolocate.settings.liAddressKeyPath).to.eql("/ULRS311/Data/LIAddressKey/");
       expect(phlGeolocate.settings.minConfidence).to.eql(85);
     });
 
@@ -42,62 +43,59 @@ describe("PHLGeolocate", function() {
     });
   });
 
-  describe("#callAPI", function () {
+  describe("#getData", function () {
     it("exists a public method on a PHLGeolocate instance", function (done) {
       phlGeolocate = require(geolocatePath)();
-      expect(typeof phlGeolocate.callAPI).to.eql("function");
+      expect(typeof phlGeolocate.getData).to.eql("function");
       done();
     });
 
-    // WIP
-    xit("makes an API call to the proper URL endpoint", function (done) {
+    it("makes an API call to the URL it is passed endpoint", function (done) {
       nock('http://www.someURL.com')
         .get('/some/path')
-        .reply(200, {'some_key':'some_value'});
+        .reply(200, fakeResp);
       
-      phlGeolocate.callAPI('http://www.someURL.com/some/path', function(r) {
-        expect(r).to.eql({'some_key':'some_value'});
+      phlGeolocate.getData('http://www.someURL.com/some/path', function(r) {
+        expect(r).to.eql([
+          {
+            address: '1500 MARKET ST',
+            similarity: 100,
+            latitude: 39.9521740263203,
+            longitude: -75.1661518986459
+          },
+          {
+            address: '1500S MARKET ST',
+            similarity: 99,
+            latitude: 39.9521740263203,
+            longitude: -75.1661518986459
+          }
+        ]);
         done();
       });
+    });
+
+    it("", function () {
+      
     });
   });
 
   describe("#parseResponse", function () {
     var phlGeolocate;
-    var fakeResp;
 
     beforeEach(function (done) {
       phlGeolocate = require(geolocatePath)();
-      fakeResp = [
-        {
-          Address: {
-            StandardizedAddress: 'first address',
-            Similarity: 100
-          },
-          YCoord: 'first y coordinate',
-          XCoord: 'first x coordinate'
-        },
-        {
-          Address: {
-            StandardizedAddress: 'second address',
-            Similarity: 90 
-          },
-          YCoord: 'second y coordinate',
-          XCoord: 'second x coordinate'
-        }
-      ];
       done();
     });
 
     it("loops over an array of locations object and returns an array of formatting locations", function () {
-      expect(phlGeolocate.parseLocations(fakeResp)[0]).to.eql({
+      expect(phlGeolocate.parseLocations(fakeLocs)[0]).to.eql({
         address: "first address",
         similarity: 100,
         latitude: "first y coordinate",
         longitude: "first x coordinate"
       });
       
-      expect(phlGeolocate.parseLocations(fakeResp)[1]).to.eql({
+      expect(phlGeolocate.parseLocations(fakeLocs)[1]).to.eql({
         address: "second address",
         similarity: 90,
         latitude: "second y coordinate",
@@ -108,14 +106,14 @@ describe("PHLGeolocate", function() {
     it("loops ignores any locations whose similarity is greater than phlGeolocate.settings.minConfidence", function () {
       phlGeolocate = require(geolocatePath)({minConfidence: 95});
 
-      expect(phlGeolocate.parseLocations(fakeResp)[0]).to.eql({
+      expect(phlGeolocate.parseLocations(fakeLocs)[0]).to.eql({
         address: "first address",
         similarity: 100,
         latitude: "first y coordinate",
         longitude: "first x coordinate"
       });
       
-      expect(phlGeolocate.parseLocations(fakeResp).length).to.eql(1);
+      expect(phlGeolocate.parseLocations(fakeLocs).length).to.eql(1);
     });
   });
 });
