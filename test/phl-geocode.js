@@ -1,7 +1,7 @@
 var nock = require('nock');
 var expect = require('expect.js');
 var sinon = require('sinon');
-var geocoderPath = '../phl-geolocate';
+var geocoderPath = '../phl-geocode';
 var fakeResp = require('./fixtures/response');
 var fakeLocs = require('./fixtures/locations');
 
