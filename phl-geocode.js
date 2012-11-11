@@ -29,29 +29,29 @@ PHLGeocode.prototype.getData = function (url, callback) {
 };
 
 PHLGeocode.prototype.parseLocations = function (locs) {
-	var self = this;
-	var locations = [];
-	var locLength = locs.length;
-	var loc;
-	var i;
-	var geometry;
-
-	for (i=0; i<locLength; i++) {
-		loc = locs[i];
-
-		if (loc.Address.Similarity >= self.settings.minConfidence) {
-			geometry = {
+  var self = this;
+  var locations = [];
+  var locLength = locs.length;
+  var loc;
+  var i;
+  var geometry;
+  
+  for (i=0; i<locLength; i++) {
+    loc = locs[i];
+    
+    if (loc.Address.Similarity >= self.settings.minConfidence) {
+      geometry = {
         address: loc.Address.StandardizedAddress,
         similarity: loc.Address.Similarity,
         latitude: loc.YCoord,
         longitude: loc.XCoord
       };
-
-			locations.push(geometry);
-		}
-	}
-
-	return locations;
+      
+      locations.push(geometry);
+    }
+  }
+  
+  return locations;
 };
 
 module.exports = function(opts) {
