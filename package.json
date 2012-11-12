@@ -4,6 +4,11 @@
   "version": "0.0.1",
   "homepage": "http://github.com/mdb/phl-geocode",
   "author": "Mike Ball",
+  "main": "./phl-geocode",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/mdb/phl-geocode.git",
+  },
   "engines": {
     "node": "0.8.14",
     "npm": "1.1.x"
