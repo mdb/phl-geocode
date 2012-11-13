@@ -54,6 +54,4 @@ PHLGeocode.prototype.parseLocations = function (locs) {
   return locations;
 };
 
-module.exports = function(opts) {
-  return new PHLGeocode(opts);
-};
+module.exports = PHLGeocode;

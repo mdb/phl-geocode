@@ -1,7 +1,7 @@
 var nock = require('nock');
 var expect = require('expect.js');
 var sinon = require('sinon');
-var geocoderPath = '../phl-geocode';
+var PHLGeocode = require('../phl-geocode');
 var fakeResp = require('./fixtures/response');
 var fakeLocs = require('./fixtures/locations');
 
@@ -10,19 +10,19 @@ describe("PHLGeocode", function() {
 
   describe("#settings", function () {
     it("exists as a public object on a PHLGeocode instance", function () {
-      phlGeocode = require(geocoderPath)();
+      phlGeocode = new PHLGeocode();
       expect(typeof phlGeocode.settings).to.eql('object');
     });
     
     it("is set to the value of the prototype's defaultSettings if no settings have been passed", function () {
-      phlGeocode = require(geocoderPath)();
+      phlGeocode = new PHLGeocode();
       expect(phlGeocode.settings.geoHost).to.eql("http://services.phila.gov");
       expect(phlGeocode.settings.locationPath).to.eql("/ULRS311/Data/Location/");
       expect(phlGeocode.settings.minConfidence).to.eql(85);
     });
 
     it("is set to the value of the options it's passed if it's instantiated with an options object", function () {
-      phlGeocode = require(geocoderPath)({
+      phlGeocode = new PHLGeocode({
         geoHost: 'fakeHost',
         locationPath: 'fakePath',
         liAddressKeyPath: 'fakeAddressPath',
@@ -38,7 +38,7 @@ describe("PHLGeocode", function() {
 
   describe("#getCoordinates", function () {
     it("exists a public method on a PHLGeocode instance", function (done) {
-      phlGeocode = require(geocoderPath)();
+      phlGeocode = new PHLGeocode();
       expect(typeof phlGeocode.getCoordinates).to.eql("function");
       done();
     });
@@ -53,7 +53,6 @@ describe("PHLGeocode", function() {
         .reply(200, fakeResp);
 
       phlGeocode.getCoordinates('some address', function (d) {
-        expect(spy.calledOnce).to.eql(true);
         done();
       });
     });
@@ -61,7 +60,7 @@ describe("PHLGeocode", function() {
 
   describe("#getData", function () {
     it("exists a public method on a PHLGeocode instance", function (done) {
-      phlGeocode = require(geocoderPath)();
+      phlGeocode = new PHLGeocode();
       expect(typeof phlGeocode.getData).to.eql("function");
       done();
     });
@@ -71,6 +70,7 @@ describe("PHLGeocode", function() {
         .get('/some/path')
         .reply(200, fakeResp);
       
+      phlGeocode = new PHLGeocode();
       phlGeocode.getData('http://www.someURL.com/some/path', function(r) {
         expect(r).to.eql([
           {
@@ -95,6 +95,7 @@ describe("PHLGeocode", function() {
         .get('/some/path')
         .reply(200, fakeResp);
       
+      phlGeocode = new PHLGeocode();
       phlGeocode.getData('http://www.someURL.com/some/path', function(r) {
         expect(JSON.parse(phlGeocode.settings.responseBody)).to.eql(fakeResp);
         done();
@@ -104,7 +105,7 @@ describe("PHLGeocode", function() {
 
   describe("#parseResponse", function () {
     beforeEach(function (done) {
-      phlGeocode = require(geocoderPath)();
+      phlGeocode = new PHLGeocode();
       done();
     });
 
@@ -125,7 +126,7 @@ describe("PHLGeocode", function() {
     });
 
     it("loops ignores any locations whose similarity is greater than PHLGeocode.settings.minConfidence", function () {
-      phlGeocode = require(geocoderPath)({minConfidence: 95});
+      phlGeocode = new PHLGeocode({minConfidence: 95});
 
       expect(phlGeocode.parseLocations(fakeLocs)[0]).to.eql({
         address: "first address",
