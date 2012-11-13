@@ -37,22 +37,25 @@ describe("PHLGeocode", function() {
   });
 
   describe("#getCoordinates", function () {
-    it("exists a public method on a PHLGeocode instance", function (done) {
+    beforeEach(function () {
       phlGeocode = new PHLGeocode();
+    });
+
+    it("exists a public method on a PHLGeocode instance", function (done) {
       expect(typeof phlGeocode.getCoordinates).to.eql("function");
       done();
     });
 
-    // WIP: why does this fail in Travis?
-    xit("calls getData", function (done) {
-      phlGeocode = require(geocoderPath)();
-      var spy = sinon.spy(phlGeocode, 'getData');
+    it("calls getData", function (done) {
+      var spy = sinon.spy(PHLGeocode.prototype, 'getData');
+      phlGeocode = new PHLGeocode();
       
       nock('http://www.someURL.com')
         .get('/some/path')
         .reply(200, fakeResp);
 
       phlGeocode.getCoordinates('some address', function (d) {
+        expect(spy.calledOnce).to.eql(true);
         done();
       });
     });
