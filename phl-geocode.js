@@ -6,7 +6,8 @@ function PHLGeocode(opts) {
     geoHost: 'http://services.phila.gov',
     locationPath: '/ULRS311/Data/Location/',
     addressKeyPath: '/ULRS311/Data/LIAddressKey/',
-    minConfidence: 85
+    minConfidence: 85,
+    responseBody: '' 
   };
 
   this.settings = opts ? _.defaults(opts, this.defaultSettings) : this.defaultSettings;
@@ -27,7 +28,7 @@ PHLGeocode.prototype.getData = function (url, callback) {
   var result;
 
   request(url, function (error, response, body) {
-    result = JSON.parse(body)
+    result = JSON.parse(body);
     if(typeof(result.Locations) != 'undefined') {
       callback(self.parseLocations(result.Locations));
     }
