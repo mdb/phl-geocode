@@ -5,6 +5,7 @@ function PHLGeocode(opts) {
   this.defaultSettings = {
     geoHost: 'http://services.phila.gov',
     locationPath: '/ULRS311/Data/Location/',
+    addressKeyPath: '/ULRS311/Data/LIAddressKey/',
     minConfidence: 85,
     responseBody: '' 
   };
@@ -17,14 +18,23 @@ PHLGeocode.prototype.getCoordinates = function (address, callback) {
   this.getData(url, callback);
 };
 
+PHLGeocode.prototype.getAddressKey = function (address, callback) {
+  var url = this.settings.geoHost + this.settings.addressKeyPath + encodeURI(address);
+  this.getData(url, callback);
+}
+
 PHLGeocode.prototype.getData = function (url, callback) {
   var self = this;
   var result;
 
   request(url, function (error, response, body) {
-    self.settings.responseBody = body;
-    result = self.parseLocations(JSON.parse(self.settings.responseBody).Locations);
-    callback(result);
+    result = JSON.parse(body);
+    if(typeof(result.Locations) != 'undefined') {
+      callback(self.parseLocations(result.Locations));
+    }
+    else {
+      callback(result);
+    }
   });
 };
 
