@@ -21,14 +21,15 @@ PHLGeocode.prototype.getCoordinates = function (address, callback) {
 PHLGeocode.prototype.getAddressKey = function (address, callback) {
   var url = this.settings.geoHost + this.settings.addressKeyPath + encodeURI(address);
   this.getData(url, callback);
-}
+};
 
 PHLGeocode.prototype.getData = function (url, callback) {
   var self = this;
   var result;
 
   request(url, function (error, response, body) {
-    result = JSON.parse(body);
+    self.settings.responseBody = body;
+    result = JSON.parse(self.settings.responseBody);
     if(typeof(result.Locations) != 'undefined') {
       callback(self.parseLocations(result.Locations));
     }
