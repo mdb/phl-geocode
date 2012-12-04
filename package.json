@@ -1,7 +1,7 @@
 {
   "name": "phl-geocode",
   "description": "Get latitude and longitude coordinates for a Philadelphia Address.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "http://github.com/mdb/phl-geocode",
   "author": "Mike Ball",
   "main": "./phl-geocode",
