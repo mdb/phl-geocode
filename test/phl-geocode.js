@@ -163,7 +163,7 @@ describe("PHLGeocode", function() {
     });
   });
 
-  describe("#parseResponse", function () {
+  describe("#parseLocations", function () {
     beforeEach(function (done) {
       phlGeocode = require(geocoderPath)();
       done();
