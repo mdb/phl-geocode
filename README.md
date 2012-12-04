@@ -37,8 +37,8 @@ Overriding default settings on instantiation:
 
 Get latitude and longitude coordinates for a Philadelpia address:
 
-    phlGeocode.getCoordinates('1500 market street', function (d) {
-      console.log(d);
+    phlGeocode.getCoordinates('1500 market street', function (err, data) {
+      console.log(data);
 
       /* Example response:
       [ { address: '1500 MARKET ST',

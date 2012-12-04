@@ -34,10 +34,10 @@ PHLGeocode.prototype.getData = function (url, callback) {
     result = JSON.parse(self.settings.responseBody);
 
     if (typeof(result.Locations) !== "undefined") {
-      callback(self.parseLocations(result.Locations));
+      callback(null, self.parseLocations(result.Locations));
     }
     else {
-      callback(result);
+      callback(null, result);
     }
   });
 };

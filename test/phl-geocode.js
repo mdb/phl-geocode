@@ -51,7 +51,7 @@ describe("PHLGeocode", function() {
         .get('/ULRS311/Data/Location/someAddress')
         .reply(200, fakeResp);
 
-      phlGeocode.getCoordinates('someAddress', function (data) {
+      phlGeocode.getCoordinates('someAddress', function (err, data) {
         expect(data).to.eql(phlGeocode.parseLocations(fakeResp.Locations));
         done();
       });
@@ -63,7 +63,7 @@ describe("PHLGeocode", function() {
           .get('/ULRS311/Data/Location/anotherAddress')
           .reply(200, fakeResp);
 
-        phlGeocode.getCoordinates('anotherAddress', function (data) {
+        phlGeocode.getCoordinates('anotherAddress', function (err, data) {
           expect(data).to.eql(phlGeocode.parseLocations(fakeResp.Locations));
           done();
         });
@@ -76,7 +76,7 @@ describe("PHLGeocode", function() {
           .get('/ULRS311/Data/Location/anotherAddress')
           .reply(200, {resp: 'fakeResponse'});
 
-        phlGeocode.getCoordinates('anotherAddress', function (data) {
+        phlGeocode.getCoordinates('anotherAddress', function (err, data) {
           expect(data).to.eql({resp: 'fakeResponse'});
           done();
         });
@@ -113,8 +113,8 @@ describe("PHLGeocode", function() {
         .get('/ULRS311/Data/LIAddressKey/someAddress')
         .reply(200, fakeResp);
 
-      phlGeocode.getAddressKey('someAddress', function (d) {
-        expect(d).to.eql(phlGeocode.parseLocations(fakeResp.Locations));
+      phlGeocode.getAddressKey('someAddress', function (err, data) {
+        expect(data).to.eql(phlGeocode.parseLocations(fakeResp.Locations));
         done();
       });
     });
@@ -132,8 +132,8 @@ describe("PHLGeocode", function() {
         .get('/some/path')
         .reply(200, fakeResp);
       
-      phlGeocode.getData('http://www.someURL.com/some/path', function(r) {
-        expect(r).to.eql([
+      phlGeocode.getData('http://www.someURL.com/some/path', function(err, data) {
+        expect(data).to.eql([
           {
             address: '1500 MARKET ST',
             similarity: 100,
@@ -156,7 +156,7 @@ describe("PHLGeocode", function() {
         .get('/some/path')
         .reply(200, fakeResp);
       
-      phlGeocode.getData('http://www.someURL.com/some/path', function(r) {
+      phlGeocode.getData('http://www.someURL.com/some/path', function(err, data) {
         expect(JSON.parse(phlGeocode.settings.responseBody)).to.eql(fakeResp);
         done();
       });
