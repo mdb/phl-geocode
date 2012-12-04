@@ -43,8 +43,7 @@ describe("PHLGeocode", function() {
       done();
     });
 
-    // WIP: why does this fail in Travis?
-    xit("calls getData", function (done) {
+    it("calls getData", function (done) {
       phlGeocode = require(geocoderPath)();
       var spy = sinon.spy(phlGeocode, 'getData');
       
@@ -52,7 +51,7 @@ describe("PHLGeocode", function() {
         .get('/some/path')
         .reply(200, fakeResp);
 
-      phlGeocode.getCoordinates('some address', function (d) {
+      phlGeocode.getCoordinates('someAddress', function (d) {
         expect(spy.calledOnce).to.eql(true);
         done();
       });
