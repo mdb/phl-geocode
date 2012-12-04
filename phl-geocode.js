@@ -30,7 +30,8 @@ PHLGeocode.prototype.getData = function (url, callback) {
   request(url, function (error, response, body) {
     self.settings.responseBody = body;
     result = JSON.parse(self.settings.responseBody);
-    if(typeof(result.Locations) != 'undefined') {
+
+    if (typeof(result.Locations) !== "undefined") {
       callback(self.parseLocations(result.Locations));
     }
     else {

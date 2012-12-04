@@ -37,10 +37,50 @@ describe("PHLGeocode", function() {
   });
 
   describe("#getCoordinates", function () {
-    it("exists a public method on a PHLGeocode instance", function (done) {
+    beforeEach(function () {
       phlGeocode = require(geocoderPath)();
+    });
+
+    it("exists a public method on a PHLGeocode instance", function (done) {
       expect(typeof phlGeocode.getCoordinates).to.eql("function");
       done();
+    });
+
+    it("performs a get request to the proper API URL", function (done) {
+      nock('http://services.phila.gov')
+        .get('/ULRS311/Data/Location/someAddress')
+        .reply(200, fakeResp);
+
+      phlGeocode.getCoordinates('someAddress', function (data) {
+        expect(data).to.eql(phlGeocode.parseLocations(fakeResp.Locations));
+        done();
+      });
+    });
+
+    context("the body of the API response has a Locations property", function () {
+      it("passes the body of the API response to parseLocations and on to the callback", function (done) {
+        nock('http://services.phila.gov')
+          .get('/ULRS311/Data/Location/anotherAddress')
+          .reply(200, fakeResp);
+
+        phlGeocode.getCoordinates('anotherAddress', function (data) {
+          expect(data).to.eql(phlGeocode.parseLocations(fakeResp.Locations));
+          done();
+        });
+      });
+    });
+
+    context("the body of the API response does not contain a Locations property", function () {
+      it("passes the raw response body to the callback", function (done) {
+        nock('http://services.phila.gov')
+          .get('/ULRS311/Data/Location/anotherAddress')
+          .reply(200, {resp: 'fakeResponse'});
+
+        phlGeocode.getCoordinates('anotherAddress', function (data) {
+          expect(data).to.eql({resp: 'fakeResponse'});
+          done();
+        });
+      });
     });
 
     // works locally but fails in Travis
