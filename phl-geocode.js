@@ -7,7 +7,7 @@ function PHLGeocode(opts) {
     locationPath: '/ULRS311/Data/Location/',
     addressKeyPath: '/ULRS311/Data/LIAddressKey/',
     minConfidence: 85,
-    responseBody: '' 
+    responseBody: ''
   };
 
   this.settings = opts ? _.defaults(opts, this.defaultSettings) : this.defaultSettings;

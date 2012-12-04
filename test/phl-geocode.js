@@ -99,6 +99,27 @@ describe("PHLGeocode", function() {
     });
   });
 
+  describe("#getAddressKey", function () {
+    beforeEach(function () {
+      phlGeocode = require(geocoderPath)();
+    });
+
+    it("exists as a public method on a phlGeocode instance", function () {
+      expect(typeof phlGeocode.getAddressKey).to.eql("function");
+    });
+
+    it("performs an API request to the proper endpoint", function (done) {
+      nock('http://services.phila.gov')
+        .get('/ULRS311/Data/LIAddressKey/someAddress')
+        .reply(200, fakeResp);
+
+      phlGeocode.getAddressKey('someAddress', function (d) {
+        expect(d).to.eql(phlGeocode.parseLocations(fakeResp.Locations));
+        done();
+      });
+    });
+  });
+
   describe("#getData", function () {
     it("exists a public method on a PHLGeocode instance", function (done) {
       phlGeocode = require(geocoderPath)();
