@@ -27,7 +27,9 @@ PHLGeocode.prototype.getData = function (url, callback) {
   var self = this;
   var result;
 
-  request(url, function (error, response, body) {
+  request(url, function (err, response, body) {
+    if (err) return callback(err);
+
     self.settings.responseBody = body;
     result = JSON.parse(self.settings.responseBody);
 
