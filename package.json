@@ -4,13 +4,13 @@
   "version": "0.0.4",
   "homepage": "http://github.com/mdb/phl-geocode",
   "author": "Mike Ball",
-  "main": "./phl-geocode",
+  "main": "lib/phl-geocode",
   "repository": {
     "type": "git",
     "url": "http://github.com/mdb/phl-geocode.git"
   },
   "engines": {
-    "node": "0.8.14",
+    "node": "0.8.18",
     "npm": "1.1.x"
   },
   "dependencies": {
@@ -22,8 +22,9 @@
     "nock": "*",
     "expect.js": "*",
     "sinon": "1.5.0",
-    "grunt": ">=0.3.16",
-    "grunt-simple-mocha": ">=0.2.0"
+    "grunt": ">=0.4",
+    "grunt-simple-mocha": "0.3.2",
+    "grunt-contrib-jshint": ">=0.1"
   },
   "scripts": {
     "test": "grunt --verbose"
